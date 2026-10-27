@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Lanchonete Malveira - Cardápio</title>
-<meta name="description" content="Cardápio Lanchonete Malveira - Hambúrguer artesanal. Faça seu pedido pelo WhatsApp.">
+<meta name="description" content="Cardápio Lanchonete Malveira - Hambúrguer artesanal e bebidas. Faça seu pedido pelo WhatsApp.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rye&family=Oswald:wght@500;700&family=Kaushan+Script&display=swap" rel="stylesheet">
 <style>
@@ -36,7 +36,9 @@ header{display:flex;flex-direction:column;align-items:center;padding:20px 16px 1
 .slogan span{color:var(--org)}
 
 .cols{padding:12px;display:flex;flex-direction:column;gap:12px}
-.col2{margin-top:0}
+
+.section-title{font-size:20px;color:var(--org);border-bottom:2px solid var(--red);padding-bottom:4px;margin:16px 0 10px;letter-spacing:1px}
+.category-title{font-size:15px;color:#ff8c00;margin:14px 0 6px;text-transform:uppercase;letter-spacing:.5px;font-weight:700}
 
 .item, .ex{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .15s ease;position:relative;margin-bottom:8px}
 .item:active, .ex:active{transform:scale(0.98);background:#1a1a1a}
@@ -67,7 +69,6 @@ header{display:flex;flex-direction:column;align-items:center;padding:20px 16px 1
 .cta{text-align:center;padding:16px 12px}
 .cta button{font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase;font-size:18px;letter-spacing:1px;color:#fff;background:var(--red);border:0;width:100%;padding:14px;border-radius:10px;cursor:pointer;box-shadow:0 4px 15px rgba(224,16,16,0.4);transition:transform .1s}
 .cta button:active{transform:scale(0.97)}
-.cta .sp{display:none}
 
 .hint{text-align:center;font-size:12px;color:#770000;padding:4px 10px 12px;font-family:Arial,sans-serif}
 
@@ -128,15 +129,19 @@ header{display:flex;flex-direction:column;align-items:center;padding:20px 16px 1
 </header>
 
 <section class="cols">
+  <div class="section-title">🍔 HAMBÚRGUERES & LANCHES</div>
   <div id="col1"></div>
-  <div class="col2">
-    <div id="col2"></div>
-    <div class="extras">
-      <h2>ACRÉSCIMOS</h2>
-      <div id="extras"></div>
-    </div>
+  <div id="col2"></div>
+
+  <div class="extras">
+    <h2>ACRÉSCIMOS</h2>
+    <div id="extras"></div>
   </div>
+
+  <div class="section-title">🍻 BEBIDAS & GELADAS</div>
+  <div id="drinks"></div>
 </section>
+
 <p class="hint">👆 Toque no item para adicionar ao pedido</p>
 <div class="cta"><button type="button" onclick="openCart()">Ver Carrinho / Finalizar</button></div>
 </main>
@@ -162,8 +167,11 @@ header{display:flex;flex-direction:column;align-items:center;padding:20px 16px 1
     </div>
 
     <div id="endBox">
-      <label for="end">Endereço Completo *</label>
-      <input id="end" autocomplete="street-address" maxlength="150" placeholder="Rua, Número, Bairro, Ponto de Referência">
+      <label for="rua">Nome da Rua e Número *</label>
+      <input id="rua" maxlength="100" placeholder="Ex: Rua das Flores, 123">
+
+      <label for="bairro">Nome do Bairro *</label>
+      <input id="bairro" maxlength="80" placeholder="Ex: Centro / Bairro Novo">
     </div>
 
     <label for="pag">Forma de Pagamento</label>
@@ -176,7 +184,7 @@ header{display:flex;flex-direction:column;align-items:center;padding:20px 16px 1
     </div>
 
     <label for="obs">Observações do Pedido</label>
-    <textarea id="obs" rows="2" maxlength="200" placeholder="Ex: sem cebola, maionese à parte..."></textarea>
+    <textarea id="obs" rows="2" maxlength="200" placeholder="Ex: sem cebola, ponto de referência..."></textarea>
 
     <div class="err" id="err" role="alert"></div>
     <button class="btn" type="button" onclick="enviar()">Enviar Pedido no WhatsApp 💬</button>
@@ -211,7 +219,57 @@ const EXTRAS = [
   ['🍳','OVO',2],['🧀','PRESUNTO/MUSSARELA',3],['🌽','BATATA/MILHO',2]
 ].map(([ic,nome,preco],i)=>({id:'E'+i,ic,nome:'Acréscimo '+nome,label:nome,preco}));
 
-const ALL = Object.fromEntries([...LANCHES,...EXTRAS].map(p=>[p.id,p]));
+const BEBIDAS = [
+  {cat:'🍺 Cervejas'},
+  [17, 'BRAHMA', 8.00, 'Lata 350ml'],
+  [18, 'SKOL', 7.00, 'Lata 350ml'],
+  [19, 'ANTARCTICA BOA', 7.00, 'Lata 350ml'],
+  [20, 'HEINEKEN', 8.00, 'Lata 350ml'],
+  [21, 'BEATS SENSES', 10.00, 'Lata 269ml'],
+
+  {cat:'🥤 Refrigerantes 2 Litros'},
+  [22, 'COCA-COLA', 15.00, 'Garrafa 2 litros'],
+  [23, 'GUARANÁ', 13.00, 'Garrafa 2 litros'],
+  [24, 'PEPSI', 13.00, 'Garrafa 2 litros'],
+  [25, 'FANTA', 13.00, 'Garrafa 2 litros'],
+
+  {cat:'🥤 Refrigerantes 200 ml'},
+  [26, 'COCA-COLA', 3.00, 'Garrafinha 200ml'],
+  [27, 'GUARANÁ', 3.00, 'Garrafinha 200ml'],
+  [28, 'PEPSI', 3.00, 'Garrafinha 200ml'],
+  [29, 'FANTA', 3.00, 'Garrafinha 200ml'],
+
+  {cat:'🥤 Refrigerantes 1 Litro'},
+  [30, 'COCA-COLA', 10.00, 'Garrafa 1 litro'],
+  [31, 'COCA-COLA ZERO', 6.00, 'Garrafa 1 litro'],
+  [32, 'GUARANÁ', 10.00, 'Garrafa 1 litro'],
+  [33, 'FANTA LARANJA', 10.00, 'Garrafa 1 litro'],
+  [34, 'MATE COURO', 10.00, 'Garrafa 1 litro'],
+
+  {cat:'🥤 Refrigerantes 600 ml'},
+  [35, 'COCA-COLA', 8.00, 'Garrafa pet 600ml'],
+  [36, 'COCA-COLA ZERO', 8.00, 'Garrafa pet 600ml'],
+  [37, 'FANTA', 8.00, 'Garrafa pet 600ml'],
+  [38, 'DEL VALLE UVA', 8.00, 'Suco Del Valle Uva 600ml'],
+
+  {cat:'🥤 Refrigerantes em Lata'},
+  [39, 'COCA-COLA', 6.00, 'Lata 350ml'],
+  [40, 'COCA-COLA ZERO', 6.00, 'Lata 350ml'],
+  [41, 'GUARANÁ', 6.00, 'Lata 350ml'],
+  [42, 'FANTA', 6.00, 'Lata 350ml'],
+
+  {cat:'⚡ Energéticos'},
+  [43, 'RED BULL', 15.00, 'Lata 250ml'],
+  [44, 'MONSTER', 15.00, 'Lata 473ml'],
+
+  {cat:'💧 Águas e Outras Bebidas'},
+  [45, 'ÁGUA CRISTAL (SEM GÁS)', 3.00, 'Garrafa 500ml'],
+  [46, 'ÁGUA CRISTAL (COM GÁS)', 3.50, 'Garrafa 500ml'],
+  [47, 'H2OH! LIMONETO', 8.00, 'Garrafa 500ml'],
+  [48, 'GATORADE (SABOR LIMÃO)', 8.00, 'Garrafa 500ml']
+].map(item => item.cat ? item : {id:'B'+item[0], n:item[0], nome:item[1], preco:item[2], desc:item[3]});
+
+const ALL = Object.fromEntries([...LANCHES,...EXTRAS,...BEBIDAS.filter(b=>!b.cat)].map(p=>[p.id,p]));
 const cart = {};
 const brl = v => 'R$ ' + v.toFixed(2).replace('.',',');
 const $ = id => document.getElementById(id);
@@ -230,9 +288,12 @@ function extraHtml(p){
   return `<div class="ex" id="${p.id}" tabindex="0" role="button" aria-label="Adicionar ${p.label}, ${brl(p.preco)}">
     <span class="ic" aria-hidden="true">${p.ic}</span><span class="nm">${p.label}</span><span class="dots"></span><span class="pr"><b>${p.preco.toFixed(2).replace('.',',')}</b></span>${qtyHtml(p.id)}</div>`;
 }
-$('col1').innerHTML = LANCHES.slice(0,12).map(itemHtml).join('');
-$('col2').innerHTML = LANCHES.slice(12).map(itemHtml).join('');
+
+$('col1').innerHTML = LANCHES.slice(0,8).map(itemHtml).join('');
+$('col2').innerHTML = LANCHES.slice(8).map(itemHtml).join('');
 $('extras').innerHTML = EXTRAS.map(extraHtml).join('');
+
+$('drinks').innerHTML = BEBIDAS.map(b => b.cat ? `<div class="category-title">${b.cat}</div>` : itemHtml(b)).join('');
 
 document.querySelectorAll('.item,.ex').forEach(el=>{
   el.addEventListener('click',()=>add(null,el.id));
@@ -246,9 +307,12 @@ function total(){ return Object.entries(cart).reduce((s,[id,q])=>s+ALL[id].preco
 
 function update(){
   Object.keys(ALL).forEach(id=>{
-    const el=$(id), q=cart[id]||0;
-    el.classList.toggle('on',q>0);
-    el.querySelector('.qty span').textContent=q;
+    const el=$(id);
+    if(el){
+      const q=cart[id]||0;
+      el.classList.toggle('on',q>0);
+      el.querySelector('.qty span').textContent=q;
+    }
   });
   const n=Object.values(cart).reduce((a,b)=>a+b,0);
   $('bc').textContent = n+(n===1?' item':' itens');
@@ -272,15 +336,15 @@ function toggleEnd(){ $('endBox').style.display = tipo()==='Entrega' ? '' : 'non
 function toggleTroco(){ $('trocoBox').style.display = $('pag').value==='Dinheiro' ? '' : 'none'; }
 
 function enviar(){
-  const nome=$('nome').value.trim(), end=$('end').value.trim(), t=tipo();
+  const nome=$('nome').value.trim(), rua=$('rua').value.trim(), bairro=$('bairro').value.trim(), t=tipo();
   if(!Object.keys(cart).length) return $('err').textContent='Adicione pelo menos um item.';
   if(!nome) return $('err').textContent='Informe seu nome.';
-  if(t==='Entrega' && !end) return $('err').textContent='Informe o endereço de entrega.';
+  if(t==='Entrega' && (!rua || !bairro)) return $('err').textContent='Informe a rua e o bairro de entrega.';
 
   let msg = `🍔 *NOVO PEDIDO - LANCHONETE MALVEIRA*\n\n👤 *Cliente:* ${nome}\n\n*Itens:*\n`;
   Object.entries(cart).forEach(([id,q])=>{ msg += `• ${q}x ${ALL[id].nome} — ${brl(ALL[id].preco*q)}\n`; });
   msg += `\n💰 *Total: ${brl(total())}*\n\n`;
-  msg += t==='Entrega' ? `🛵 *Entrega*\n📍 ${end}\n` : `🏪 *Retirada no local*\n`;
+  msg += t==='Entrega' ? `🛵 *Entrega*\n📍 Rua: ${rua}\n🏘️ Bairro: ${bairro}\n` : `🏪 *Retirada no local*\n`;
   msg += `💳 *Pagamento:* ${$('pag').value}`;
   if($('pag').value==='Dinheiro' && $('troco').value.trim()) msg += ` (troco para R$ ${$('troco').value.trim()})`;
   if($('obs').value.trim()) msg += `\n📝 *Obs:* ${$('obs').value.trim()}`;
